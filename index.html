@@ -9,12 +9,7 @@
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=600 tabindex="1"></canvas>
-      <input id="mobileInput" 
-             type="text" 
-             style="position: absolute; top: -100px; left: 0; width: 80%; font-size: 18px; z-index: 9999; display: none;" 
-             oninput="sendToUnity(this.value)" 
-             onblur="hideMobileInput()" />
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -119,41 +114,17 @@
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          window.unityInstance = unityInstance; // <-- ADD THIS LINE
-          loadingBar.style.display = "none";
-          fullscreenButton.onclick = () => {
-            unityInstance.SetFullscreen(1);
-          };
-        }).catch((message) => {
-          alert(message);
-        });
-      };
+              }).then((unityInstance) => {
+                loadingBar.style.display = "none";
+                fullscreenButton.onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+              }).catch((message) => {
+                alert(message);
+              });
+            };
 
       document.body.appendChild(script);
-
-      function showMobileInput(yPos) {
-        const input = document.getElementById("mobileInput");
-        input.style.top = yPos + "px"; // You can adjust this Y position
-        input.style.left = "10%";
-        input.style.display = "block";
-        input.focus();
-      }
-
-      function hideMobileInput() {
-        const input = document.getElementById("mobileInput");
-        input.style.top = "-100px";
-        input.style.display = "none";
-      }
-
-      function sendToUnity(value) {
-        console.log("Sending to Unity:", value); // <-- Add for debugging
-        if (typeof unityInstance !== 'undefined') {
-          unityInstance.SendMessage('InputBridge', 'ReceiveInputFromJS', value);
-        } else {
-          console.error("unityInstance is not defined!"); // <-- Add for debugging
-        }
-      }
 
     </script>
   </body>
